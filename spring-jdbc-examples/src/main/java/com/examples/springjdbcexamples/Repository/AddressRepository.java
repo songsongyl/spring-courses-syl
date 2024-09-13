@@ -10,13 +10,17 @@ import java.util.List;
 
 @Repository
 public interface AddressRepository extends CrudRepository<Address,String> {
+
+    //基于uid查询address
     @Query("""
             select * from address a where a.user_id = :id;
             """)
     List<Address> findByUId(String id);
 
+    //利用封装的方法
     List<Address> findByUserId(String id);
 
+    //更新信息基于id
     @Query("""
             update address a set a.detail = :detail where a.id = :id
           """)

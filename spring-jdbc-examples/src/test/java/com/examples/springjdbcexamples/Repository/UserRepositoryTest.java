@@ -48,6 +48,11 @@ class UserRepositoryTest {
     }
 
     @Test
+    void update(){
+        String name = "syl1";
+        userRepository.updateById(name,"1283947928306098176");
+    }
+    @Test
     void findDesc(){
         int page = 1;
         int pageSize = 5;
