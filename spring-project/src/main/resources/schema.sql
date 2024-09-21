@@ -1,9 +1,10 @@
-# create table if not exists `department`
-# (
-#   id char(19) primary key ,
-#   name varchar(20)  not null ,
-#
-# );
+create table if not exists `department`
+(
+  id char(19) primary key ,
+  name varchar(20)  not null ,
+  insert_time datetime not null default current_timestamp ,
+  update_time datetime not null default current_timestamp on update current_timestamp
+);
 
 create table if not exists `user`
 (
@@ -16,6 +17,8 @@ create table if not exists `user`
     `group` tinyint unsigned null ,
     student json null comment '{sequence,projectTitle,teacherId,teacherName}',
     teacher json comment '{total,A,C}',
+    insert_time datetime not null default current_timestamp ,
+    update_time datetime not null default current_timestamp on update current_timestamp,
     unique (account),
     index ((cast(depart ->> '$.depId' as char(19)) collate utf8mb3_bin),role),
     index((cast(student ->> '$.teacherId' as char (19) )collate utf8mb3_bin))
@@ -25,12 +28,14 @@ create table if not exists `process`
 (
     dep_id char(19) not null ,
     id char(19) primary key ,
-    name varchar(10) not null ,
+    name varchar(20) not null ,
     `describe` varchar(100) null ,
     point tinyint unsigned not null ,
-    item json not null comment '[{number,name,percentage,describe}]',
+    items json not null comment '[{number,name,percentage,describe}]',
     type char(4) not null ,
-    attach json null comment '[{number,name,extend]',
+    attach json null comment '[{number,name,extend,describe]',
+    insert_time datetime not null default current_timestamp ,
+    update_time datetime not null default current_timestamp on update current_timestamp,
     index(dep_id)
 );
 
@@ -41,7 +46,22 @@ create table if not exists `process_score`
     teacher_id char(19) not null ,
     process_id char(19) not null ,
     `group` tinyint unsigned null ,
+    insert_time datetime not null default current_timestamp ,
+    update_time datetime not null default current_timestamp on update current_timestamp,
     scores json not null comment '{teacherName,scores,detail:[{itemId,score}]}',
     unique (process_id,teacher_id,student_id)
+);
+
+create table if not exists `process_file`
+(
+    id          char(19)    not null primary key,
+    detail      varchar(60) null,
+    student_id  char(19)    not null,
+    process_id  char(19)    not null,
+    number      tinyint     not null,
+    insert_time datetime    not null default current_timestamp,
+    update_time datetime    not null default current_timestamp on update current_timestamp,
+
+    unique (process_id, student_id, number)
 );
 
