@@ -38,6 +38,14 @@ public interface UserRepository extends CrudRepository<User,String> {
           """)
     @Modifying
     void updateById(String name,String uid);
+
+
+    //基于id删除user
+    @Modifying
+    @Query("""
+            delete from user where id = :uid;
+          """)
+    void deleteById(String uid);
 //    查询用户并降序排序
     @Query("""
             select * from user u order by u.id desc limit :#{#pageable.offset}, :#{#pageable.pageSize}

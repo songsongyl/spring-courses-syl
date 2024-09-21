@@ -7,9 +7,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface AddressRepository extends CrudRepository<Address,String> {
+public interface AddressRepository extends CrudRepository<Address, String> {
 
     //基于uid查询address
     @Query("""
@@ -20,10 +21,19 @@ public interface AddressRepository extends CrudRepository<Address,String> {
     //利用封装的方法
     List<Address> findByUserId(String id);
 
+    //基于id删除
+    @Modifying
+    @Query("""
+            delete from address where id = :aid;
+            """)
+    void deleteById(String aid);
+
     //更新信息基于id
     @Query("""
-            update address a set a.detail = :detail where a.id = :id
-          """)
+                  update address a set a.detail = :detail where a.id = :id
+            """)
     @Modifying
-    void updateDetail(String detail,String id);
+    void updateDetail(String detail, String id);
+
+
 }

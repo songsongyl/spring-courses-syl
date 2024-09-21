@@ -52,6 +52,12 @@ class UserRepositoryTest {
         String name = "syl1";
         userRepository.updateById(name,"1283947928306098176");
     }
+
+    @Test
+    void delete(){
+        userRepository.deleteById("1283947928306098176");
+    }
+
     @Test
     void findDesc(){
         int page = 1;
