@@ -43,13 +43,13 @@ create table if not exists `process_score`
 (
     id char(19) primary key ,
     student_id char(19) not null ,
-    teacher_id char(19) not null ,
+#     teacher_id char(19) not null ,
     process_id char(19) not null ,
     `group` tinyint unsigned null ,
     insert_time datetime not null default current_timestamp ,
     update_time datetime not null default current_timestamp on update current_timestamp,
-    scores json not null comment '{teacherName,scores,detail:[{itemId,score}]}',
-    unique (process_id,teacher_id,student_id)
+    scores json not null comment '[{ teacherId,teacherName,scores,detail:[{itemId,score}]}]',
+    unique (process_id,student_id)
 );
 
 create table if not exists `process_file`
