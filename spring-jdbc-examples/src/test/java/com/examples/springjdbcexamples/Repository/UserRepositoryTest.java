@@ -2,6 +2,8 @@ package com.examples.springjdbcexamples.Repository;
 
 import com.examples.springjdbcexamples.dox.Address;
 import com.examples.springjdbcexamples.dox.User;
+import com.examples.springjdbcexamples.dto.UserAddress;
+import com.examples.springjdbcexamples.dto.UserAddress2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,4 +74,19 @@ class UserRepositoryTest {
             log.debug(address.toString());
         }
     }
+
+    @Test
+    void findUserAddressByUserId(){
+        UserAddress userAddress = userRepository.findUserAddressByUserId("1283947928306098176");
+        log.debug("{}",userAddress.getUser());
+        userAddress.getAddresses().forEach(a->log.debug(a.toString()));
+    }
+
+    @Test
+    void findUserAddress2ByUserId(){
+        UserAddress2 u = userRepository.findUserAddress2ByUserId("1283947928306098176");
+        log.debug(u.toString());
+    }
+
+
 }

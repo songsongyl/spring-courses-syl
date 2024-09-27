@@ -2,6 +2,10 @@ package com.examples.springjdbcexamples.Repository;
 
 import com.examples.springjdbcexamples.dox.Address;
 import com.examples.springjdbcexamples.dox.User;
+import com.examples.springjdbcexamples.dto.UserAddress;
+import com.examples.springjdbcexamples.dto.UserAddress2;
+import com.examples.springjdbcexamples.mapper.UserAddress2ResultSetExtractor;
+import com.examples.springjdbcexamples.mapper.UserAddressResultSetExtractor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
@@ -61,4 +65,16 @@ public interface UserRepository extends CrudRepository<User,String> {
             where u.id=:userId
             """)
     List<Address> findAddressesByUserId(String userId);
+
+    //利用userId 查询userAddress
+    @Query(value = """
+select * from user u join address a on u.id = a.user_id where u.id=:uid
+""",resultSetExtractorClass = UserAddressResultSetExtractor.class)
+    UserAddress findUserAddressByUserId(String uid);
+
+    //利用userId 查询userAddress2
+    @Query(value = """
+select * from user u join address a on u.id = a.user_id where u.id=:uid
+""",resultSetExtractorClass = UserAddress2ResultSetExtractor.class)
+    UserAddress2 findUserAddress2ByUserId(String uid);
 }
