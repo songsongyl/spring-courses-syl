@@ -4,6 +4,7 @@ import com.examples.springjdbcexamples.dox.Address;
 import com.examples.springjdbcexamples.dox.User;
 import com.examples.springjdbcexamples.dto.UserAddress;
 import com.examples.springjdbcexamples.dto.UserAddress2;
+import com.examples.springjdbcexamples.dto.UserCountDto;
 import com.examples.springjdbcexamples.mapper.UserAddress2ResultSetExtractor;
 import com.examples.springjdbcexamples.mapper.UserAddressResultSetExtractor;
 import org.springframework.data.domain.Pageable;
@@ -77,4 +78,10 @@ select * from user u join address a on u.id = a.user_id where u.id=:uid
 select * from user u join address a on u.id = a.user_id where u.id=:uid
 """,resultSetExtractorClass = UserAddress2ResultSetExtractor.class)
     UserAddress2 findUserAddress2ByUserId(String uid);
+
+    //查询所有用户姓名及对应address的个数
+    @Query("""
+select u.name as name,count(a.user_id) as count from user u join address a on u.id = a.user_id group by u.id order by count;
+""")
+    List<UserCountDto> findUserCountDto();
 }

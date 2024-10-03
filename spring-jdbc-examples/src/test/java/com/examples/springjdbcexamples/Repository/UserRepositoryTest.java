@@ -88,5 +88,9 @@ class UserRepositoryTest {
         log.debug(u.toString());
     }
 
+    @Test
+    void findUserCount(){
+        userRepository.findUserCountDto().forEach(System.out::println);
+    }
 
 }

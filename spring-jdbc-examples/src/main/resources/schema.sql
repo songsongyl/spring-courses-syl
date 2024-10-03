@@ -23,3 +23,6 @@ explain
 select a.id as id, a.detail as detail, a.user_id as user_id,a.create_time as create_time,a.update_time as update_time,u.name as name
 from address a join user u on a.user_id = u.id
 where a.id = '1';
+
+explain
+select u.name as name,count(a.user_id) as count from user u join address a on u.id = a.user_id group by u.id order by count;
