@@ -1,0 +1,18 @@
+### error
+POST localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "account": "100",
+  "password": "123"
+}
+
+### success
+
+POST localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "account": "100",
+  "password": "123456"
+}

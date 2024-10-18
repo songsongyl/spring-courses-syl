@@ -1,0 +1,8 @@
+### getUsers
+GET localhost:8080/api/admin/users
+
+### getUser
+GET localhost:8080/api/admin/users/100
+
+### error
+GET localhost:8080/api/admin/users/1001
