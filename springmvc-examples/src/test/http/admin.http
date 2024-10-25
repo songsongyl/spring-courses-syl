@@ -7,5 +7,10 @@ GET localhost:8080/api/admin/users/100
 ### error
 GET localhost:8080/api/admin/users/1001
 
-###
+### user token
 GET localhost:8080/api/admin/users
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoid2V3ZSIsInVpZCI6IjIiLCJpYXQiOjE3Mjk4MjA1MTgsImV4cCI6MTcyOTkwNjkxOH0.HhzcK0lwG1e0YrHpcmOhnA4-0nah916jDs0ECA8DQdY
+
+### admin token
+GET localhost:8080/api/admin/users
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic3FXZiIsInVpZCI6IjEiLCJpYXQiOjE3Mjk4MjA1NTMsImV4cCI6MTcyOTkwNjk1M30.jSdCcE2toDMkllZMOo8ncbHjG_JYRjT76fxe_MlpJcM

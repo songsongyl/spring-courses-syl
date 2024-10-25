@@ -27,11 +27,14 @@ public class LoginController {
     private final JWTComponent jwtComponent;
     @PostMapping("login")
     public ResultVo login(@RequestBody User user, HttpServletResponse response) {
+
         User userR = userService.getUserByAccount(user.getAccount());
+        log.debug("{}",userR);
         if(userR == null || !passwordEncoder.matches(user.getPassword(), userR.getPassword())) {
+            log.debug("{}",userR);
             return ResultVo.error(Code.LOGIN_ERROR);
         }
-        String token = jwtComponent.encode(Map.of("uid", userR.getId(),"role",user.getRole()));
+        String token = jwtComponent.encode(Map.of("uid", userR.getId(),"role",userR.getRole()));
         response.setHeader("token", token);
         response.setHeader("role", user.getRole());
         return ResultVo.success(userR);
