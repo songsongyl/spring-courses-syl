@@ -1,0 +1,13 @@
+POST localhost:8080/api/admin/users
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMzAyMTkyNjI4OTE1NTIzNTg0Iiwicm9sZSI6ImFhc3MiLCJpYXQiOjE3MzA1MzgxMzMsImV4cCI6MTczMDYyNDUzM30.7HQ-A_CDdOQeA7sy4t6eEEkdfMOCrKrfFz_0kBoaS50
+Content-Type: application/json
+
+{
+  "name": "syl",
+  "account": "syl",
+  "role": "svfs"
+}
+
+### reset
+PUT localhost:8080/api/admin/users/syl/password
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMzAyMTc0NjU0NzI0ODUzNzYwIiwicm9sZSI6ImFhc3MiLCJpYXQiOjE3MzA1MzMwOTksImV4cCI6MTczMDYxOTQ5OX0._pvGQuel_PMFGQMFDaH4nqgrZH3zYIUBFOd__liO-gg

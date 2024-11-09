@@ -1,0 +1,26 @@
+### success
+POST localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "account": "admin",
+  "password": "admin"
+}
+
+### error
+POST localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "account": "admin",
+  "password": "saaas"
+}
+
+### success
+POST localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "account": "syl",
+  "password": "syl"
+}
