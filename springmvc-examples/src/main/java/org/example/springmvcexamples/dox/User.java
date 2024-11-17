@@ -19,6 +19,7 @@ public class User {
     private String id;
     private String name;
     private String account;
+    //序列化时忽略
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String role;
