@@ -15,6 +15,7 @@
         <module>springmvc-examples</module>
         <module>backend-examples</module>
         <module>redis-examples</module>
+        <module>webflux-r2dbc-examples</module>
     </modules>
 
 </project>

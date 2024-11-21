@@ -25,12 +25,12 @@ public class AdminController {
 
     @GetMapping("users/{account}")
     public ResultVo getUser(@PathVariable String account){
-//       User user =  userService.getUserByAccount(account);
-//       if(user == null){
-//           return ResultVo.error(Code.BAD_REQUEST);
-//       }
-//       return ResultVo.success(user);
-        return ResultVo.success(userService.getUserByAccount(account));
+       User user =  userService.getUserByAccount(account);
+       if(user == null){
+           return ResultVo.error(Code.BAD_REQUEST);
+       }
+       return ResultVo.success(user);
+//        return ResultVo.success(userService.getUserByAccount(account));
 //        感觉设计有点不合理
     }
 }

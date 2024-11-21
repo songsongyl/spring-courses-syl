@@ -36,6 +36,7 @@ public class LoginController {
         }
         String token = jwtComponent.encode(Map.of("uid", userR.getId(),"role",userR.getRole()));
         response.setHeader("token", token);
+        //request 没有这个方法
         response.setHeader("role", user.getRole());
         return ResultVo.success(userR);
     }

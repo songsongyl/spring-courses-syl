@@ -1,185 +1,152 @@
-# Experiments
-### 实验1 持久化实验
-**实验目的**  
-掌握基于idea的基本springboot工程项目的创建方法。  
-理解maven项目结构，依赖配置声明管理。  
-掌握DO类与数据表的映射规则。  
-掌握基本的属性映射规则。  
-理解雪花算法主键生成策略与特点。  
-掌握基于spring-data-jdbc框架的基本CURD操作。
+# spring-data-jdbc-examples
+### SQL/NoSQL
+**Example01**  
+毕业设计评分数据库设计，数据库仅记录评分，统计由前端加载数据后负责。需求：  
+毕业设计成绩由若干过程组成(开题/期中/毕业答辩等)，每过程又包含若干比例的评分项(开题：报告50%/前瞻创新性25%/答辩说明25%)。  
+教师为学生的每个过程中的每个子项评分。
 
-**实验内容**   
-创建springboot项目，添加spring-data-jdbc框架相关依赖。  
-创建springboot项目配置文件，添加数据源/logging等相关配置。  
-创建数据表生成脚本，编写user表结构。  
-打开idea database视图，添加连接远程数据库。  
-执行脚本生成测试数据表。  
-编写user表对应的DO类，按映射规则声明属性。  
-编写雪花算法注入实现。  
-编写操作DO类的Repository组件。  
-编写测试类，注入Repository组件，执行增删改等持久化方法。  
-测试事务
+按范式设计：  
+过程表，包含过程名称/描述等。  
+过程项表，过程ID，每过程子项的详细信息，项名称/描述等。  
+评分表，过程ID，子项ID，学生ID，教师ID，评分。
 
-### 实验2 关联查询映射实验
-**实验目的**  
-理解仅索引非外键关系的作用。  
-掌握编写关联查询语句的方法。  
-掌握关联查询的声明使用方法。  
-掌握基于Explain的SQL语句分析与优化。  
-掌握基于RowMapper/ResultSetExtractor接口的结果集映射方法。
+3张表；5名教师仅为20名学生的开题评分(3子项)，5 * 20 * 3 = 300条记录；同时前端渲染展示时，需显示教师名称及评分，需并表查询。
 
-**实验内容**   
-结合上一实验内容。  
-在schema脚本添加user/address数据表，声明若干字段。  
-在address包含user表主键并设置为索引；user 1:N address，address 1:1 user。  
-项目声明数据源/启动执行schema脚本/logging等基本配置。  
-编写持久层组件userRepository/AddressRepository接口。  
-编写测试用例，添加若干user记录，以及user对应的address记录。
+反范式冗余设计：  
+过程表，将过程子项以JSON数组存储。  
+评分表，过程ID，学生ID，教师ID，将教师每过程子项评分，及教师姓名以JSON字段冗余存储。
 
-实现以下数据检索，且需先通过explain分析预执行的SQL语句，验证检索方式是否符合预期后再在组件实现。
-- 基于userid，查询全部address信息，通过address repository查询即可
-- 基于addressid，查询address信息以及user信息，通过RowMapper映射行实现。需DTO
-- 基于userid，查询user信息，以及全部address信息，通过ResultSetExtractor映射全部结果集实现。需DTO
+2张表；5名教师为20名学生的开题评分(3子项)，5 * 20 = 100条记录；无需并表查询。   
+甚至可以将所有教师在一个过程对一名学生的所有评分，以JSON数组存储，开题评分将只有20条记录。但语句过于复杂需整合使用多个函数。
 
-按需创建不同方式封装user/address中信息的DTO类。
+**Example02**  
+教师信息数据库设计。需求：   
+专业部门信息   
+教师，属于某唯一部门，需要加载指定部门的所有教师功能；需要基于教师ID加载教师信息，及所属部门信息功能。
 
-编写测试类测试
+按范式设计：  
+部门表，部门信息描述。  
+教师表，部门ID+索引，但获取部门信息时必须并表查询。
 
-### 实验3 AOP切面实验
-**实验目的**
-理解面向切面编程的作用与意义。  
-理解动态代理技术。
-掌握spring AOP框架的声明创建方法。  
-掌握基本前置/后置/环绕等通知声明方法。  
-掌握基本切面执行表达式的声明方法。  
-掌握基于自定义注解/AOP切面技术的权限控制。
+反范式冗余设计：  
+基于分析，部门信息不会经常变更，因此可将部门信息以JSON冗余的存储在教师表，当基于教师ID查询教师及部门信息时，可直接加载而无需并表查询。  
+同时，添加JSON类型中部门ID属性为索引，即可通过部门ID获取全部教师而无需全表扫描。
 
-**实验内容**   
-创建springboot项目，添加aop依赖。  
-声明日志等基本配置。  
-创建自定义权限注解。  
-编写业务组件，基于自定义权限注解模拟权限业务方法。  
-创建基于自定义注解的权限切面类，声明基于注解的方法级/类级环绕拦截器，并模拟判断权限。
-业务方法权限与请求用户权限不符则抛出自定义异常。  
-编写测试类，测试业务组件的调用。
-
-### 实验4 SpringMVC实验
-**实验目的**  
-理解并掌握REST API的设计及实现方法。  
-理解并掌握controller组件的声明方法。  
-理解并掌握HTTP GET/POST/PATCH请求的处理。  
-理解并掌握JSON数据结构。   
-理解并掌握基本基于Jackson的数据响应。   
-理解并掌握基于json请求数据的封装。  
-理解并掌握基于idea的HTTP REST API模拟请求脚本。
-
-**实验内容**  
-创建一个支持SpringMVC的springboot项目。  
-添加log/jackson忽略空属性等基本配置。
-
-需求0  
-创建ResultVO类，统一处理响应数据。  
-在controller下，创建UserController控制组件，添加REST注解，声明/api根路径。  
-创建处理/index，请求方法，返回ResultVO对象，封装普通字符串即可。
-
-需求+1  
-在dto下，创建User类，添加用户名/密码，为密码添加序列化忽略注解，当序列化user对象时，将忽略密码属性。
-```shell
-@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+### JSON Functions
+索引。将department json字段中depId属性按char(19) UTF8字符集以二进制存储建索引。因此区分大小写
 ```
-在控制组件中模拟一个users集合，模拟封装若干user对象。  
-创建处理/users，get请求方法，封装users集合。   
-创建处理/users/{uid}，get请求方法，获取请求地址user ID参数，基于参数从users集合中获取对象，封装到返回。注意Map.of()不能添加null，因此需处理如果集合中没有指定ID对象的实现。  
-创建处理/users，post请求方法，将请求数据封装到User对象，作为参数注入方法，将对象添加到users集合。
+sql
+index ((cast(department ->> '$.depId' as char(19)) collate utf8mb4_bin))
+```
 
-在test下，创建http文件夹，创建user.http测试脚本测试请求。
+json_object()，将属性数值封装为JSON类型。函数以键值对组为参数
+```
+sql
+select json_object('name', u.name, 'stars', u.stars) as detail
+from github_user u;
+```
 
-### 实验5 SpringMVC拦截器实验
-**实验目的**  
-理解拦截器的作用与意义。
-掌握拦截器的声明配置方法。
-掌握拦截器过滤指定请求的配置方法。
-掌握拦截器的实现方法。
-了解拦截器回调方法的区别和使用场景。
-掌握在拦截器中请求权限验证。
+json_arrayagg()，将多JSON数据封装为JSON数组
+```
+sql
+select ps.id,
+json_arrayagg(json_object('teacherId', ps.teacher_id, 'processId', ps.process_id)) as detail
+from process_score ps;
+```
 
-**实验内容**  
-创建springboot项目，引入Springmvc等依赖。
+JSON_TABLE()函数，可将JSON数组映射为数据表支持创建虚拟主键；映射元素对象属性
 
-需求0  
-添加Spring Security框架中的加密解密依赖。注意：不是在构建工程时添加Spring Security整体框架，仅需其中的crypto依赖
-在application中添加log/jackson忽略空属性配置，以及自定义加密密钥与盐值。
+```
+sql
+explain
+select * from process_score_3 ps
+join JSON_TABLE(ps.detail,
+    '$[*]'
+    columns (
+        `id` for ordinality ,
+        `tid` char(19) path '$.teacherId'
+        )
+    ) as jt
+where ps.process_id='1' and jt.tid='1';
+```
 
-在component下，创建整合Jackson的加密/解密组件EncryptorComponent，注入密钥与盐值，实现对给定Map对象的加密/解密，对无法解密异常，转抛为自定义异常。  
-创建SecurityConfiguration配置类，创建基于BCryptPasswordEncoder算法的PasswordEncoder对象，注入spring容器。  
-在dto下创建User类，添加userName/password属性，getter/setter注解等；添加password的序列化忽略注解。  
-在controller下，创建LoginController组件，注入密码编码组件，注入加密/解密组件。组件内创建一个Map，模拟基于用户名保存用户对象。  
-创建处理/register post请求方法，将注册用户密码编码，将user对象保存在Map对象中(模拟数据库)。  
-创建处理/login post请求方法，判断登录用户是否存在，用户密码是否正确；并将用户名加密保存在响应header中。  
-在interceptor下，创建LoginInterceptor拦截器，从请求header中获取token数据，解密并将解密出的用户名置于requestattribute中。
+### Others
+#### @Id & @Table & @Column & @Version
+@Id，修饰主键属性。更新/保存操作时判断  
+@Table，修饰DO类，可指定映射数据表名称  
+@Column，修饰属性，可指定映射数据段名称  
+@Version，修饰映射乐观锁属性，更新时自动比较属性值
 
-创建实现WebMvcConfigurer接口的配置实现类WebMvcConfiguration，重写addInterceptors()方法，注册拦截器，设置拦截规则过滤。
+#### @EnableJdbcAuditing & AuditorAware
+支持自定义jdbc的主键生成策略，示例基于snowflake算法生成ID  
+AuditorAware接口，同一类型仅支持一个实现
 
-在LoginController组件中，创建处理/index get请求，在方法中注入requestattribute中的用户名，并将用户名返回。
+#### @CreatedBy
+@CreatedBy，声明属性自动生成，与AuditorAware配合使用。修饰在主键属性，指定通过自定义主键生成策略生成ID  
+即示例，对修饰了@CreatedBy注解的String类型，调用snowflake算法生成的数据
 
-测试  
-在test下，创建http目录，创建login.http测试脚本。  
-编写注册测试脚本。  
-编写登录测试脚本测试，在响应中获取token数据。  
-编写/index请求测试脚本，在header中携带token发起请求。
+#### @CreatedDate & @LastModifiedDate
+@CreateDate，修饰LocalDateTime类，在创建对象时自动创建日期时间对象保存到数据库  
+@LastModifiedDate，修饰LocalDateTime类，每次更新对象时自动创建日期时间对象，更新到数据库
 
-### 实验6 Cache缓存实验
-**实验目的**  
-理解业务层缓存的作用与意义。  
-理解spring-cache缓存框架的实现原理。  
-掌握spring-cache缓存框架的声明配置方法。  
-掌握基本缓存注解的声明方法。  
-掌握基本SpEL表达式使用方法。
+#### @ReadOnlyProperty
+声明属性为数据库生成数据，持久化时会忽略，可用于修饰由数据库生成的日期时间属性。
 
-**实验内容**  
-创建springboot项目，添加springmvc/cache等实验依赖，声明启动缓存。  
-创建测试DTO类；创建测试模拟持久层组件，实现基本获取更新操作。  
-创建业务组件，获取全部用户，获取指定用户，更新指定用户业务逻辑。   
-添加spring-cache缓存注解，对以上业务使用合适缓存策略。
+#### CrudRepository
+CrudRepository<T, ID>接口，提供了针对DO类的基本CRUD操作方法。T，操作的DO类型，ID，主键类型
+- T save(S entity)方法，默认保存全部属性值，值为null时也会保存到数据库，因此会覆盖数据库设置的default值
+- T save(S entity)方法，当保存对象id属性非空时，执行update更新方法，同样会覆盖全部属性值
+- `Optional<T> findById(ID id)`
+- `long count()`
+- `Iterable<S> findAll()/findAllById(Iterable<ID> ids)`
+- `Iterable<S> saveAll(Iterable<S> entities)`
+- `void delete(T entity)/deleteById(ID id)/deleteAll()/deleteAllById(Iterable<ID> ids)`
+- `boolean existsById(ID id)`
 
-### 实验7 Redis限流实验
-**实验目的**  
-理解非关系型数据库的特点及适用场景。  
-理解redis基本数据类型。
-掌握基本redis命令。
-掌握lua脚本的基本语法。  
-掌握redis函数的声明方法。  
-掌握redisson客户端的声明配置方法。  
-掌握redisson基本接口类型的使用方法。
+#### Pagination & Sorted
+基于MySQL limit语句实现分页  
+基于Pageable接口计算limit offset size等数据
 
-**实验内容**
-创建springboot项目，添加redisson等实验依赖。  
-编写项目基本配置。  
-编写redis数据源等基本redisson配置。  
-编写lua脚本函数，实现数据的统计及时效性检验。  
-编写应用启动监听器，注册脚本函数到redis服务器。
-编写测试类，通过redisson客户端调用调用redis函数，测试限流函数的有效性。
+#### RowMapper & ResultSetExtractor
+通过自定义映射类，可以实现将一次多表关联查询的结果集，部分结果映射为集合，部分映射为普通属性，封装在dto。  
+RowMapper接口，自定义行的映射实现。传入的ResultSet是当前遍历的行，无需关闭rs资源。
+- T mapRow(ResultSet rs, int rowNum)，重写行映射方法。传入行结果集对象，手动完成映射封装。
 
+ResultSetExtractor接口，自定义结果的映射实现。传入的ResultSet是整个结果集，无需关闭。例如将多条记录映射为一个对象组装一个集合
+- T extractData(ResultSet rs)，重写映射规则方法。传入的ResultSet为整个结果集对象，与原生JDBC类似，需手动移动游标遍历结果集。
 
-### 实验8 Redis stream消息队列实验
-**实验目的**  
-理解消息中间件的特点及适用场景。  
-理解基于redis stream实现消息队列的原理。  
-理解redis stream中消费组/消费者/消息状态/消息确认等基本概念。  
-理解ULID分布式主键算法。
-掌握spring-data-redis框架的基本使用方法。  
-掌握基于redis的消息监听器的声明配置方法。
-掌握创建消息容器/消息消费者等对象的声明配置方法。  
-掌握消息发送确认的方法。
+@Query注解通过rowMapperClass/resultSetExtractorClass指定自定义封装实现
 
-**实验内容**
-基于上一实验内容。  
-编写redis数据源等基本redisson配置。  
-编写测试DTO类Order，添加所需属性及消息组等名称。  
-编写lua脚本，实现针对指定商品的单线程抢购逻辑函数。  
-编写消息监听器，确认并消费订单处理消息。  
-编写创建消息监听器容器，绑定指定消息队列。   
-编写业务组件，实现将抢购商品添加至redis服务器业务逻辑。
-实现抢购业务逻辑，通过调用redis函数实现在高并发下商品抢购的一致性操作，并在抢购成功后发送订单至消息队列处理。  
-编写测试类，测试商品抢购逻辑。  
-测试消息监听器的消息消费逻辑。  
+#### Updates & @Modifying
+spring-data-jdbc的更新操作，同样基于save()方法。内部通过判断主键是否存在执行插入/更新操作  
+save()方法会更新全部属性字段。即，对象的空值属性也会更新！！因此，更新局部属性数据时，必须先查询出全部，合并，再执行更新操作，与JPA相同。mybatis支持仅更新非null属性
+
+如果预一次请求完成，可通过@Modifying+@Query+手写update语句实现，但不灵活
+
+#### Concurrency
+@Version，修饰乐观锁版本属性字段。  
+悲观锁在SQL查询语句追加for update锁定。
+
+#### PagingAndSortingRepository
+支持分页/排序，大数据量基于上一页最后ID与limit手动分页更灵活
+
+#### QueryByExampleExecutor
+QueryByExampleExecutor接口支持简单的基于字符串的动态查询语句，例如，开始/结束/首字母/忽略大小写等，不支持数值比较等复杂操作。
+
+#### BeforeConvertCallback
+通过BeforeConvertCallback回调接口，在save()方法保存数据时填充主键。有点麻烦。
+```java
+@Bean
+BeforeConvertCallback<User> beforeConvertCallback() {
+    return aggregate -> {
+        if (aggregate.getId().isEmpty()) {
+            aggregate.setId(getId());
+        }
+        return aggregate;
+    };
+}
+```
+
+#### VS mybatis-plus
+优点：切换到r2dbc很方便；可自定义映射类型无需xml配置；也支持乐观锁版本控制属性；简单直观；  
+缺点：没有代码逆向生成；缺少开箱即用的主键生成实现；不支持局部更新；不支持动态拼接查询语句；没有丰富的功能插件；   
