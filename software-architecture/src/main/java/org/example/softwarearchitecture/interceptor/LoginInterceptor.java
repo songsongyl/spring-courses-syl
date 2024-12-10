@@ -16,7 +16,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             throw new XException("未登录");
         }
         int role = Integer.parseInt(request.getHeader("role"));
-        int uid = Integer.parseInt(request.getHeader("uid"));
+        String uid = request.getHeader("uid");
         request.setAttribute("role", role);
         request.setAttribute("uid", uid);
         return true;

@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface AddressRepository extends CrudRepository<Address,String>{
-    @Query("select * from address1 a where a.user_id=:uid")
+    @Query("select * from address a where a.user_id=:uid")
     List<Address> findAddresses(String uid);
 }

@@ -1,4 +1,10 @@
-###
-GET http://localhost:8080/api/admin/users/4
+### 无权限
+GET http://localhost:8080/api/admin/users/1315926558169518080
+role: 1
+uid: 1315926558169518080
+
+
+### 有权限
+GET http://localhost:8080/api/admin/users/1315926558169518080
 role: 10
-uid: 1
+uid: 1315928510420897792

@@ -30,7 +30,7 @@ public class LoginController {
         // 实际开发应基于JWT等规范，将用户实际权限/ID等敏感信息加密生成token令牌在header返给前端
         // 前端在每次请求时携带token校验
         response.addHeader("role", user.getRole().toString());
-        response.addHeader("uid", user.getId().toString());
+        response.addHeader("uid", user.getId());
 
         return  Map.of("user", user);
     }

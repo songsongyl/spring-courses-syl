@@ -1,8 +1,17 @@
-###
+### success
 POST http://localhost:8080/api/login
 Content-Type: application/json
 
 {
   "account": "1001",
+  "password": "1001"
+}
+
+### error
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "account": "syl",
   "password": "1001"
 }

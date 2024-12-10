@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
+
 @SpringBootTest
 @Slf4j
 public class RepositoryTest {
@@ -39,7 +41,7 @@ public class RepositoryTest {
 
     @Test
     public void findUserByIdTest() {
-        userRepository.findById("1283947928306098176").ifPresent(System.out::println);
+        userRepository.findById("1315926290199629824").ifPresent(System.out::println);
     }
 
     @Test
@@ -52,24 +54,30 @@ public class RepositoryTest {
     public void addAddressTest() {
         Address a = Address.builder()
                 .detail("491")
-                .userId("1283947928306098176")
+                .userId("1315926290199629824")
                 .build();
         addressRepository.save(a);
         Address a2 = Address.builder()
                 .detail("237")
-                .userId("1283947928306098176")
+                .userId("1315926290199629824")
                 .build();
         addressRepository.save(a2);
+        Address a3 = Address.builder()
+                .detail("dsf")
+                .userId("1315926558169518080")
+                .build();
+        addressRepository.save(a3);
+
     }
 
     @Test
     public void findAddressesTest() {
-        addressRepository.findAddresses("1283947928306098176").forEach(System.out::println);
+        addressRepository.findAddresses("1315927067857145856").forEach(System.out::println);
     }
 
     @Test
     public void findUserByAddressTest() {
-        User u = userRepository.find("1283947928306098176");
-        log.debug("{}", u);
+        Optional<User> u = userRepository.find("1315927067857145856");
+        log.debug("{}", u.get());
     }
 }

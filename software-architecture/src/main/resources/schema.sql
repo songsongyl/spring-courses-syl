@@ -2,7 +2,7 @@
  用户表，一对多地址表
  登录密码应加密编码后存储
  */
-create table if not exists `user1`
+create table if not exists `user`
 (
 
     id char(19) primary key ,
@@ -15,7 +15,7 @@ create table if not exists `user1`
  地址表，一对一用户表
  用户表主键未设为外键，添加索引用于检索
  */
-create table if not exists `address1`
+create table if not exists `address`
 (
     id char(19) primary key ,
     detail varchar(40) not null,
